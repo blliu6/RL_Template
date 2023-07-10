@@ -106,14 +106,12 @@ class ReplayBuffer:
 def train_off_policy_agent(env, agent, num_episodes, replay_buffer, minimal_size, batch_size):
     return_list = []
     for i in range(10):
-        with tqdm(total=num_episodes // 10, desc=f'Iteration {i}') as pbar:
+        with tqdm(total=num_episodes // 10, colour='green', desc=f'Iteration {i}') as pbar:
             for i_episode in range(num_episodes // 10):
                 episode_return = 0
-                state, info = env.reset()
-                done = False
-                cnt = 0
-                while (not done) and cnt < 200:
-                    cnt += 1
+                state, info = env.reset(seed=0)
+                done, truncated = False, False
+                while not done and not truncated:
                     action = agent.choose_action(state)
                     next_state, reward, done, truncated, info = env.step(action)
                     replay_buffer.add(state, action, reward, next_state, done)
@@ -154,7 +152,6 @@ if __name__ == "__main__":
     batch_size = 64
     sigma = 0.01  # 高斯噪声标准差
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    print(device)
 
     env_name = 'Pendulum-v1'
     env = gym.make(env_name)
