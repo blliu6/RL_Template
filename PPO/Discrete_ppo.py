@@ -1,5 +1,5 @@
 import torch
-import gym
+import gymnasium as gym
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
@@ -103,8 +103,8 @@ def train_on_policy_agent(env, agent, num_episodes):
                 episode_return = 0
                 transition_dict = {'states': [], 'actions': [], 'next_states': [], 'rewards': [], 'dones': []}
                 state, info = env.reset(seed=0)
-                done = False
-                while not done:
+                done, truncated = False, False
+                while not done and not truncated:
                     action = agent.choose_action(state)
                     next_state, reward, done, truncated, info = env.step(action)
                     transition_dict['states'].append(state)

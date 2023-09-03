@@ -1,5 +1,5 @@
 import torch
-import gym
+import gymnasium as gym
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
